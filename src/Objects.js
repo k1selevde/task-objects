@@ -7,7 +7,16 @@
   и присвоить начальное значение 100000.
   Объект после манипуляций следует вернуть в качестве результата работы функции.
 */
-export function personUpdate(data) {
+export function personUpdate({gender, age, income, ...data}) {
+    const incomeCondition = gender === 'male' || income
+    income = gender === 'male' ? (income || 100000) : income
+
+    return ({
+        gender,
+        ...(incomeCondition && {income}),
+        ...(gender === 'male' && {age}),
+        ...data
+    })
 }
 
 /*
@@ -15,6 +24,7 @@ export function personUpdate(data) {
   Верните список названий этих полей в алфавитном порядке в виде массива строк.
 */
 export function objectFieldsList(obj1, obj2, obj3) {
+    return Object.keys({...obj1, ...obj2, ...obj3}).sort()
 }
 
 /*
@@ -23,4 +33,10 @@ export function objectFieldsList(obj1, obj2, obj3) {
   Количество клонов - count.
 */
 export function objectClone(obj, count) {
+    return Array
+        .from({length: count}).map((_,i) => i)
+        .map(i => ({
+          id: i,
+          ...JSON.parse(JSON.stringify(obj))
+        }))
 }
